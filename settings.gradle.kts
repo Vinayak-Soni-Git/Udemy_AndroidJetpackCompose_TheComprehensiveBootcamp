@@ -21,4 +21,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "Udemy_AndroidJetpackCompose_TheComprehensiveBootcamp"
 include(":app")
+include(":Kotlin")
  

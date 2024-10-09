@@ -7,8 +7,10 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -25,6 +27,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.udemy_androidjetpackcompose_thecomprehensivebootcamp.bizcardapp.BizCardApp
+import com.example.udemy_androidjetpackcompose_thecomprehensivebootcamp.tipcalculatorapp.MainTipCalculatorAppActivity
 import com.example.udemy_androidjetpackcompose_thecomprehensivebootcamp.ui.theme.Udemy_AndroidJetpackCompose_TheComprehensiveBootcampTheme
 
 class MainActivity : ComponentActivity() {
@@ -64,6 +67,13 @@ private fun SetButtons(){
             context.startActivity(openBizCardApp)
         }, colors = buttonColors, shape = buttonShape, modifier = Modifier.fillMaxWidth()) {
             Text(text = "BizCard App")
+        }
+        Spacer(modifier = Modifier.height(5.dp))
+        Button(onClick = { 
+            val openJetTipApp = Intent(context, MainTipCalculatorAppActivity::class.java)
+            context.startActivity(openJetTipApp)
+        }, colors = buttonColors, shape = buttonShape, modifier = Modifier.fillMaxWidth()) {
+            Text(text = "Tip Calculator App")
         }
     }
 }
