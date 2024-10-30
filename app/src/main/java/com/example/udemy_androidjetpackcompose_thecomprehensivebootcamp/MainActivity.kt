@@ -28,6 +28,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.udemy_androidjetpackcompose_thecomprehensivebootcamp.bizcardapp.BizCardApp
 import com.example.udemy_androidjetpackcompose_thecomprehensivebootcamp.movieapp.MainMovieAppActivity
+import com.example.udemy_androidjetpackcompose_thecomprehensivebootcamp.noteapp.MainNoteAppActivity
 import com.example.udemy_androidjetpackcompose_thecomprehensivebootcamp.tipcalculatorapp.MainTipCalculatorAppActivity
 import com.example.udemy_androidjetpackcompose_thecomprehensivebootcamp.ui.theme.Udemy_AndroidJetpackCompose_TheComprehensiveBootcampTheme
 
@@ -82,6 +83,13 @@ private fun SetButtons(){
             context.startActivity(openMovieApp)
         }, colors = buttonColors, shape = buttonShape, modifier = Modifier.fillMaxWidth()) {
             Text(text = "Movie App")
+        }
+        Spacer(modifier = Modifier.height(5.dp))
+        Button(onClick = { 
+            val openNoteApp = Intent(context, MainNoteAppActivity::class.java)
+            context.startActivity(openNoteApp)
+        }, colors = buttonColors, shape = buttonShape, modifier = Modifier.fillMaxWidth()) {
+            Text(text = "Note App")
         }
     }
 }
