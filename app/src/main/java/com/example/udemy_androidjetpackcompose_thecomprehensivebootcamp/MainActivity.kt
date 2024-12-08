@@ -4,19 +4,16 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -27,10 +24,13 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.udemy_androidjetpackcompose_thecomprehensivebootcamp.bizcardapp.BizCardApp
+import com.example.udemy_androidjetpackcompose_thecomprehensivebootcamp.capstonereaderapp.MainReaderAppActivity
+import com.example.udemy_androidjetpackcompose_thecomprehensivebootcamp.jettriviaapp.MainTriviaActivity
 import com.example.udemy_androidjetpackcompose_thecomprehensivebootcamp.movieapp.MainMovieAppActivity
 import com.example.udemy_androidjetpackcompose_thecomprehensivebootcamp.noteapp.MainNoteAppActivity
 import com.example.udemy_androidjetpackcompose_thecomprehensivebootcamp.tipcalculatorapp.MainTipCalculatorAppActivity
 import com.example.udemy_androidjetpackcompose_thecomprehensivebootcamp.ui.theme.Udemy_AndroidJetpackCompose_TheComprehensiveBootcampTheme
+import com.example.udemy_androidjetpackcompose_thecomprehensivebootcamp.weatherforecastapp.MainWeatherForecastAppActivity
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -90,6 +90,27 @@ private fun SetButtons(){
             context.startActivity(openNoteApp)
         }, colors = buttonColors, shape = buttonShape, modifier = Modifier.fillMaxWidth()) {
             Text(text = "Note App")
+        }
+        Spacer(modifier = Modifier.height(5.dp))
+        Button(onClick = {
+            val openJetTriviaApp = Intent(context, MainTriviaActivity::class.java)
+            context.startActivity(openJetTriviaApp)
+        }, colors = buttonColors, shape = buttonShape, modifier = Modifier.fillMaxWidth()){
+            Text(text = "Jet Trivia Questions App")
+        }
+        Spacer(modifier = Modifier.height(5.dp))
+        Button(onClick = {
+            val openWeatherForecastApp = Intent(context, MainWeatherForecastAppActivity::class.java)
+            context.startActivity(openWeatherForecastApp)
+        }, colors = buttonColors, shape = buttonShape, modifier = Modifier.fillMaxWidth()){
+            Text(text = "Weather Forecast App")
+        }
+        Spacer(modifier = Modifier.height(5.dp))
+        Button(onClick = {
+            val openReaderApp = Intent(context, MainReaderAppActivity::class.java)
+            context.startActivity(openReaderApp)
+        }, colors = buttonColors, shape = buttonShape, modifier = Modifier.fillMaxWidth()){
+            Text(text = "Reader App")
         }
     }
 }

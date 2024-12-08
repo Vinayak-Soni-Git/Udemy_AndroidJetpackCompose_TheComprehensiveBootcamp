@@ -5,7 +5,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:name=".noteapp.NoteApplication"
+        android:name=".capstonereaderapp.CapstoneReaderApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -15,6 +15,21 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Udemy_AndroidJetpackCompose_TheComprehensiveBootcamp"
         tools:targetApi="31">
+        <activity
+            android:name=".capstonereaderapp.MainReaderAppActivity"
+            android:exported="false"
+            android:label="@string/title_activity_main_reader_app"
+            android:theme="@style/Theme.Udemy_AndroidJetpackCompose_TheComprehensiveBootcamp" />
+        <activity
+            android:name=".weatherforecastapp.MainWeatherForecastAppActivity"
+            android:exported="false"
+            android:label="@string/title_activity_main_weather_forecast_app"
+            android:theme="@style/Theme.Udemy_AndroidJetpackCompose_TheComprehensiveBootcamp" />
+        <activity
+            android:name=".jettriviaapp.MainTriviaActivity"
+            android:exported="false"
+            android:label="@string/title_activity_main_trivia"
+            android:theme="@style/Theme.Udemy_AndroidJetpackCompose_TheComprehensiveBootcamp" />
         <activity
             android:name=".noteapp.MainNoteAppActivity"
             android:exported="false"

@@ -5,4 +5,9 @@
     <string name="title_activity_main_tip_calculator_app">MainTipCalculatorAppActivity</string>
     <string name="title_activity_main_note_app">MainNoteAppActivity</string>
     <string name="noteAppName">NoteApp</string>
+    <string name="title_activity_main_trivia">MainTriviaActivity</string>
+    <string name="title_activity_main_weather_forecast_app">MainWeatherForecastAppActivity</string>
+    <string name="title_activity_main_reader_app">MainReaderAppActivity</string>
+    
+    <string name="create_account">Please enter a valid email and password that is at least 6 characters</string>
 </resources>

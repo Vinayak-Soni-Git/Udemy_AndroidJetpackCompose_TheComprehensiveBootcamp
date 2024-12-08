@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "224630357892",
+    "project_id": "androidjetareader",
+    "storage_bucket": "androidjetareader.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:224630357892:android:615cc14a108797b5da27d1",
+        "android_client_info": {
+          "package_name": "com.example.udemy_androidjetpackcompose_thecomprehensivebootcamp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAUzNXDKYR1bJtMJ-WGIi6AtWrzvgRhg10"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
