@@ -20,7 +20,12 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -33,6 +38,7 @@ import com.example.udemy_androidjetpackcompose_thecomprehensivebootcamp.weatherf
 import com.example.udemy_androidjetpackcompose_thecomprehensivebootcamp.weatherforecastapp.model.Weather
 import com.example.udemy_androidjetpackcompose_thecomprehensivebootcamp.weatherforecastapp.model.WeatherItem
 import com.example.udemy_androidjetpackcompose_thecomprehensivebootcamp.weatherforecastapp.navigation.WeatherScreens
+import com.example.udemy_androidjetpackcompose_thecomprehensivebootcamp.weatherforecastapp.screens.favorites.SettingsViewModel
 import com.example.udemy_androidjetpackcompose_thecomprehensivebootcamp.weatherforecastapp.utils.formatDate
 import com.example.udemy_androidjetpackcompose_thecomprehensivebootcamp.weatherforecastapp.utils.formatDecimals
 import com.example.udemy_androidjetpackcompose_thecomprehensivebootcamp.weatherforecastapp.widgets.HumidityWindPressureRow
@@ -45,23 +51,36 @@ import com.example.udemy_androidjetpackcompose_thecomprehensivebootcamp.weatherf
 fun MainScreen(
     navController: NavController,
     mainViewModel: MainViewModel = hiltViewModel(),
+    settingsViewModel: SettingsViewModel = hiltViewModel(),
     city: String?
 ) {
-    val weatherData = produceState(
-        initialValue = DataOrException(loading = true)
-    ) {
-        value = mainViewModel.getWeatherData(city = city.toString())
-    }.value
-
-    if (weatherData.loading == true) {
-        CircularProgressIndicator()
-    } else if (weatherData.data != null) {
-        MainScaffold(weather = weatherData.data!!, navController)
+    val currentCity:String = if (city!!.isBlank()) "Seattle" else city
+    val unitFromDb = settingsViewModel.unitList.collectAsState().value
+    var unit by remember {
+        mutableStateOf("imperial")
     }
+    var isImperial by remember { mutableStateOf(false) }
+    if (unitFromDb.isEmpty()) {
+        unit = unitFromDb[0].unit.split(" ")[0].lowercase()
+        isImperial = unit == "imperial"
+
+        val weatherData = produceState(
+            initialValue = DataOrException(loading = true)
+        ) {
+            value = mainViewModel.getWeatherData(city = currentCity, units = unit)
+        }.value
+
+        if (weatherData.loading == true) {
+            CircularProgressIndicator()
+        } else if (weatherData.data != null) {
+            MainScaffold(weather = weatherData.data!!, navController, isImperial = isImperial)
+        }
+    }
+
 }
 
 @Composable
-fun MainScaffold(weather: Weather, navController: NavController) {
+fun MainScaffold(weather: Weather, navController: NavController, isImperial: Boolean) {
     Scaffold(topBar = {
         WeatherAppBar(
             title = "India",
@@ -73,13 +92,13 @@ fun MainScaffold(weather: Weather, navController: NavController) {
             elevation = 5.dp
         )
     }) {
-        MainContent(data = weather)
+        MainContent(data = weather,     isImperial = isImperial)
         Text(modifier = Modifier.padding(it), text = "")
     }
 }
 
 @Composable
-fun MainContent(data: Weather) {
+fun MainContent(data: Weather, isImperial: Boolean) {
     val imageUrl = "https://openweathermap.org/img/wn/10d.png"
     Column(
         Modifier
@@ -115,7 +134,7 @@ fun MainContent(data: Weather) {
             }
         }
     }
-    HumidityWindPressureRow(weather = data.list[0])
+    HumidityWindPressureRow(weather = data.list[0], isImperial = isImperial)
     Divider()
     SunsetSunriseRow(weather = data.list[0])
     Text("This Week", style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold)

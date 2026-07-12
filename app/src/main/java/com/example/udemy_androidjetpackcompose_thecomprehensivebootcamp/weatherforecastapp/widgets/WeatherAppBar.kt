@@ -1,6 +1,8 @@
 package com.example.udemy_androidjetpackcompose_thecomprehensivebootcamp.weatherforecastapp.widgets
 
 
+import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -10,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Search
@@ -20,28 +23,32 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.udemy_androidjetpackcompose_thecomprehensivebootcamp.weatherforecastapp.model.Favorite
 import com.example.udemy_androidjetpackcompose_thecomprehensivebootcamp.weatherforecastapp.navigation.WeatherScreens
+import com.example.udemy_androidjetpackcompose_thecomprehensivebootcamp.weatherforecastapp.screens.favorites.FavoriteViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -50,11 +57,14 @@ fun WeatherAppBar(
     icon: ImageVector? = null,
     isMainScreen: Boolean = true,
     elevation: Dp = 0.dp,
+    favoriteViewModel: FavoriteViewModel = hiltViewModel(),
     navController: NavController,
     onAddActionClicked: () -> Unit = {},
     onButtonClicked: () -> Unit = {}
 ) {
     val showDialog = remember { mutableStateOf(false) }
+    val showToast = remember { mutableStateOf(false) }
+    val context = LocalContext.current
     if (showDialog.value) {
         ShowSettingDropDownMenu(showDialog = showDialog, navController = navController)
     }
@@ -105,8 +115,47 @@ fun WeatherAppBar(
                         onButtonClicked.invoke()
                     })
             }
+            if (isMainScreen) {
+                val isAlreadyFavList =
+                    favoriteViewModel.favList.collectAsState().value.filter { item ->
+                        (item.city == title.split(",")[0])
+                    }
+                if (isAlreadyFavList.isEmpty()) {
+                    Icon(
+                        imageVector = Icons.Default.Favorite,
+                        contentDescription = "Fav icon",
+                        modifier = Modifier
+                            .scale(0.9f)
+                            .clickable {
+                                val data = title.split(",")
+                                favoriteViewModel.insertFavorites(
+                                    Favorite(
+                                        city = data[0],
+                                        country = data[1]
+                                    )
+                                ).run {
+                                    showToast.value = true
+                                }
+                            },
+                        tint = Color.Red.copy(alpha = 0.6f)
+                    )
+                }
+
+            } else {
+                showToast.value = false
+                Box {}
+            }
+            ShowToast(context = context, showToast = showToast)
+
         },
     )
+}
+
+@Composable
+fun ShowToast(context: Context, showToast: MutableState<Boolean>) {
+    if (showToast.value) {
+        Toast.makeText(context, "City added to favorites", Toast.LENGTH_SHORT).show()
+    }
 }
 
 @Composable
@@ -133,7 +182,7 @@ fun ShowSettingDropDownMenu(showDialog: MutableState<Boolean>, navController: Na
                         expanded = false
                         showDialog.value = false
                         navController.navigate(
-                            when(text){
+                            when (text) {
                                 "About" -> WeatherScreens.AboutScreen.name
                                 "Favorites" -> WeatherScreens.FavouriteScreen.name
                                 else -> WeatherScreens.SettingsScreen.name
