@@ -8,6 +8,7 @@ import com.example.udemy_androidjetpackcompose_thecomprehensivebootcamp.capstone
 import com.example.udemy_androidjetpackcompose_thecomprehensivebootcamp.capstonereaderapp.screens.home.ReaderHomeScreen
 import com.example.udemy_androidjetpackcompose_thecomprehensivebootcamp.capstonereaderapp.screens.login.ReaderLoginScreen
 import com.example.udemy_androidjetpackcompose_thecomprehensivebootcamp.capstonereaderapp.screens.search.ReaderBookSearchScreen
+import com.example.udemy_androidjetpackcompose_thecomprehensivebootcamp.capstonereaderapp.screens.stats.ReaderStatsScreen
 
 @Composable
 fun ReaderNavigation(){
@@ -24,6 +25,9 @@ fun ReaderNavigation(){
         }
         composable(ReaderScreens.SearchScreen.name){
             ReaderBookSearchScreen(navController = navController)
+        }
+        composable(ReaderScreens.ReaderStatsScreen.name){
+            ReaderStatsScreen(navController)
         }
     }
 }

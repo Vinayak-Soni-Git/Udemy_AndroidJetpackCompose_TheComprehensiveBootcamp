@@ -1,5 +1,5 @@
 [versions]
-agp = "9.2.1"
+agp = "9.4.1"
 coilCompose = "2.4.0"
 converterGson = "2.9.0"
 firebaseBom = "33.6.0"

@@ -26,30 +26,47 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.udemy_androidjetpackcompose_thecomprehensivebootcamp.capstonereaderapp.components.ReaderLogo
 import com.example.udemy_androidjetpackcompose_thecomprehensivebootcamp.capstonereaderapp.navigation.ReaderScreens
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.delay
+import kotlin.time.Duration.Companion.milliseconds
 
 @Composable
-fun ReaderSplashScreen(navController: NavController = NavController(context = LocalContext.current)){
+fun ReaderSplashScreen(navController: NavController = NavController(context = LocalContext.current)) {
     val scale = remember { Animatable(0f) }
     LaunchedEffect(key1 = true) {
-        scale.animateTo(targetValue = 0.9f, animationSpec = tween(durationMillis = 800,
-            easing = {OvershootInterpolator(8f).getInterpolation(it)}))
-        delay(2000L)
-        navController.navigate(ReaderScreens.LoginScreen.name)
+        scale.animateTo(
+            targetValue = 0.9f, animationSpec = tween(
+                durationMillis = 800,
+                easing = { OvershootInterpolator(8f).getInterpolation(it) })
+        )
+        delay(2000L.milliseconds)
+        if (FirebaseAuth.getInstance().currentUser?.email.isNullOrBlank()) {
+            navController.navigate(ReaderScreens.LoginScreen.name)
+        } else {
+            navController.navigate(ReaderScreens.ReaderHomeScreen.name)
+        }
     }
-    
-    Surface(modifier = Modifier.padding(15.dp).size(330.dp).scale(scale.value),
+
+    Surface(
+        modifier = Modifier
+            .padding(15.dp)
+            .size(330.dp)
+            .scale(scale.value),
         shape = CircleShape, color = Color.White,
         border = BorderStroke(width = 2.dp, color = Color.LightGray)
     ) {
-        Column(modifier = Modifier.padding(1.dp),
+        Column(
+            modifier = Modifier.padding(1.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center) {
+            verticalArrangement = Arrangement.Center
+        ) {
             ReaderLogo()
             Spacer(modifier = Modifier.height(15.dp))
-            Text(text = "\"Read. Change. Yourself\"",
+            Text(
+                text = "\"Read. Change. Yourself\"",
                 style = MaterialTheme.typography.headlineSmall,
-                color = Color.Black)
+                color = Color.Black
+            )
         }
     }
 }
