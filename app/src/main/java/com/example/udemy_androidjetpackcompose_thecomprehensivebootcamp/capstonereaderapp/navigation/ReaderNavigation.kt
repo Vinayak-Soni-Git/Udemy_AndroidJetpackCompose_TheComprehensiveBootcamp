@@ -11,23 +11,31 @@ import com.example.udemy_androidjetpackcompose_thecomprehensivebootcamp.capstone
 import com.example.udemy_androidjetpackcompose_thecomprehensivebootcamp.capstonereaderapp.screens.stats.ReaderStatsScreen
 
 @Composable
-fun ReaderNavigation(){
+fun ReaderNavigation() {
     val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = ReaderScreens.SplashScreen.name){
-        composable(ReaderScreens.SplashScreen.name){
+    NavHost(navController = navController, startDestination = ReaderScreens.SplashScreen.name) {
+        composable(ReaderScreens.SplashScreen.name) {
             ReaderSplashScreen(navController = navController)
         }
-        composable(ReaderScreens.LoginScreen.name){
+
+        composable(ReaderScreens.LoginScreen.name) {
             ReaderLoginScreen(navController = navController)
         }
-        composable(ReaderScreens.ReaderHomeScreen.name){
+
+        composable(ReaderScreens.ReaderHomeScreen.name) {
             ReaderHomeScreen(navController = navController)
         }
-        composable(ReaderScreens.SearchScreen.name){
+
+        composable(ReaderScreens.SearchScreen.name) {
             ReaderBookSearchScreen(navController = navController)
         }
-        composable(ReaderScreens.ReaderStatsScreen.name){
+
+        composable(ReaderScreens.ReaderStatsScreen.name) {
             ReaderStatsScreen(navController)
+        }
+
+        composable(ReaderScreens.SearchScreen.name) {
+            ReaderBookSearchScreen(navController)
         }
     }
 }

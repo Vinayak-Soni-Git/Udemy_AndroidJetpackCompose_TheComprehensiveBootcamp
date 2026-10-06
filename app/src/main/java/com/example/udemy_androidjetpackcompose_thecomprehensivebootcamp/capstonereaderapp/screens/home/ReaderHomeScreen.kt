@@ -2,16 +2,20 @@ package com.example.udemy_androidjetpackcompose_thecomprehensivebootcamp.capston
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
@@ -39,6 +43,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
@@ -59,7 +64,7 @@ fun ReaderHomeScreen(navController: NavController) {
         topBar = { ReaderAppBar(title = "A. Reader", navController = navController) },
         floatingActionButton = {
             FabContent {
-
+                navController.navigate(ReaderScreens.SearchScreen.name)
             }
         }) {
         Surface(
@@ -76,8 +81,10 @@ fun ReaderHomeScreen(navController: NavController) {
 @Composable
 fun ReaderAppBar(
     title: String,
+    icon: ImageVector? = null,
     showProfile: Boolean = true,
-    navController: NavController
+    navController: NavController,
+    onBackArrowClicked: () -> Unit = {}
 ) {
     TopAppBar(
         title = {
@@ -91,12 +98,20 @@ fun ReaderAppBar(
                             .scale(0.6f)
                     )
                 }
+                if (icon != null) {
+                    Icon(
+                        imageVector = icon,
+                        contentDescription = null,
+                        tint = Color.Red.copy(alpha = 0.7f),
+                        modifier = Modifier.clickable { onBackArrowClicked.invoke() })
+                }
+                Spacer(modifier = Modifier.width(40.dp))
+
                 Text(
                     text = title,
                     color = Color.Red.copy(alpha = 0.7f),
                     style = TextStyle(fontWeight = FontWeight.Bold, fontSize = 20.sp)
                 )
-                Spacer(modifier = Modifier.width(150.dp))
             }
         },
         actions = {
@@ -105,11 +120,14 @@ fun ReaderAppBar(
                     navController.navigate(ReaderScreens.LoginScreen.name)
                 }
             }) {
-                Icon(
-                    imageVector = Icons.Filled.Logout,
-                    contentDescription = "Logout",
-                    tint = Color.Green.copy(alpha = 0.4f)
-                )
+                if (showProfile) Row() {
+                    Icon(
+                        imageVector = Icons.Filled.Logout,
+                        contentDescription = "Logout",
+                        tint = Color.Green.copy(alpha = 0.4f)
+                    )
+                } else Box() {}
+
             }
         },
         colors = TopAppBarDefaults.topAppBarColors(
@@ -123,6 +141,14 @@ fun ReaderAppBar(
 
 @Composable
 fun HomeContent(navController: NavController) {
+    val listOfBooks = listOf(
+        MBook(id = "", title = "Hello Again", authors = "All of us", notes = null),
+        MBook(id = "", title = "Hello Again 2", authors = "All of us", notes = null),
+        MBook(id = "", title = "Hello Again 3", authors = "All of us", notes = null),
+        MBook(id = "", title = "Hello Again 4", authors = "All of us", notes = null),
+        MBook(id = "", title = "Hello Again 5", authors = "All of us", notes = null)
+    )
+    val email = FirebaseAuth.getInstance().currentUser?.email
     val currentUserName = if (FirebaseAuth.getInstance().currentUser?.email.isNullOrEmpty())
         FirebaseAuth.getInstance().currentUser?.email?.split("@")?.get(0) else "N/A"
 
@@ -152,6 +178,34 @@ fun HomeContent(navController: NavController) {
                     overflow = TextOverflow.Clip
                 )
                 Divider()
+            }
+        }
+//        ListCard()
+        ReadingRightNowArea(books = listOf(), navController)
+        TitleSection(label = "Reading List")
+        BookListArea(listOfBooks = emptyList<MBook>(), navController)
+    }
+}
+
+@Composable
+fun BookListArea(listOfBooks: List<MBook>, navController: NavController) {
+    HorizontalScrollableComponent(listOfBooks) {
+
+    }
+}
+
+@Composable
+fun HorizontalScrollableComponent(listOfBooks: List<MBook>, onCardPress: (String) -> Unit) {
+    val scrollState = rememberScrollState()
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .heightIn(280.dp)
+            .horizontalScroll(scrollState)
+    ) {
+        for (book in listOfBooks) {
+            ListCard(book) {
+                onCardPress(it)
             }
         }
     }
@@ -242,18 +296,25 @@ fun ListCard(book: MBook, onPressDetails: (String) -> Unit) {
                 }
             }
             Text(
-                text = "Book Title",
+                text = book.title.toString(),
                 modifier = Modifier.padding(4.dp),
                 fontWeight = FontWeight.Bold,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis
             )
             Text(
-                text = "Authors: All...",
+                text = book.authors.toString(),
                 modifier = Modifier.padding(4.dp),
                 style = MaterialTheme.typography.titleMedium
             )
+            Row(
+                horizontalArrangement = Arrangement.End,
+                verticalAlignment = Alignment.Bottom
+            ) {
+                RoundedButton(label = "Reading", radius = 70)
+            }
         }
+
     }
 }
 
@@ -280,6 +341,25 @@ fun BookRating(score: Double = 4.5) {
 }
 
 @Composable
-fun RoundedButton(){
-
+fun RoundedButton(label: String = "Reading", radius: Int = 30, onPress: () -> Unit = {}) {
+    Surface(
+        modifier = Modifier.clip(
+            RoundedCornerShape(
+                bottomEndPercent = radius,
+                topStartPercent = radius
+            )
+        ), color = Color(0xff92cbdf)
+    ) {
+        Column(
+            modifier = Modifier
+                .width(90.dp)
+                .heightIn(40.dp)
+                .clickable { onPress.invoke() },
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(text = label, style = TextStyle(color = Color.White, fontSize = 15.sp))
+        }
+    }
 }
+
